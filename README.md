@@ -22,7 +22,7 @@ Vector CANoe를 활용하여 ECU의 진단 통신 관련 요구사양서를 분�
       CAN DataBase
     </td>
     <td>
-      <img width="300" height="300" alt="Image" src="https://github.com/user-attachments/assets/2be179cd-4655-4d0a-b5ea-77e3afbe420b" />
+      <img width="400" height="400" alt="Image" src="https://github.com/user-attachments/assets/2be179cd-4655-4d0a-b5ea-77e3afbe420b" />
     </td>
   </tr>
   <tr>
@@ -30,7 +30,7 @@ Vector CANoe를 활용하여 ECU의 진단 통신 관련 요구사양서를 분�
       Simulation Setup
     </td>
     <td>
-      <img width="300" height="300" alt="Image" src="https://github.com/user-attachments/assets/d743a9d6-d082-4390-9384-cc7ae1f68465" />
+      <img width="400" height="400" alt="Image" src="https://github.com/user-attachments/assets/d743a9d6-d082-4390-9384-cc7ae1f68465" />
     </td>
   </tr>
   <tr>
