@@ -8,3 +8,6 @@ Vector CANoe를 활용하여 ECU의 진단 통신 관련 요구사양서를 분�
 
 ## Vector CANoe Configuration  
 <img width="600" height="500" alt="Image" src="https://github.com/user-attachments/assets/5592f2fb-1732-4efd-b33a-cecfbc461391" />
+
+## 전체 진행 과정  
+<img width="600" height="500" alt="Image" src="https://github.com/user-attachments/assets/9c3e886f-9b4e-4e7c-bd87-36c72a82b4af" />
