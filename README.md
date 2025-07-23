@@ -16,3 +16,29 @@ Vector CANoe를 활용하여 ECU의 진단 통신 관련 요구사양서를 분�
 <img width="600" height="500" alt="Image" src="https://github.com/user-attachments/assets/dd477180-c079-4d04-b006-44a3a616c1af" />  
 
 ## 2️⃣ 검증 환경 구축
+<table>
+  <tr>
+    <td style="vertical-align: top; text-align: left;">
+      CAN DataBase
+    </td>
+    <td>
+      <img width="300" height="300" alt="Image" src="https://github.com/user-attachments/assets/2be179cd-4655-4d0a-b5ea-77e3afbe420b" />
+    </td>
+  </tr>
+  <tr>
+    <td style="vertical-align: top; text-align: left;">
+      Simulation Setup
+    </td>
+    <td>
+      <img width="300" height="300" alt="Image" src="https://github.com/user-attachments/assets/d743a9d6-d082-4390-9384-cc7ae1f68465" />
+    </td>
+  </tr>
+  <tr>
+    <td style="vertical-align: top; text-align: left;">
+      Panel(UI)
+    </td>
+    <td>
+      ![Image](https://github.com/user-attachments/assets/4363fdc0-2659-4ed7-bfe7-a48fd7f164e7)
+    </td>
+  </tr>
+</table>  
