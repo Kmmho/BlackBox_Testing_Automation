@@ -1,0 +1,34 @@
+﻿/*@!Encoding:65001*/
+includes
+{
+  
+}
+
+variables
+{
+  message IGN_01_2ms IGN_01_2ms_msg;
+  message ENG_02_10ms ENG_02_10ms_msg;
+  msTimer IgnitionTimer;
+  msTimer EngineTimer;
+  
+  byte IgnitionTimer_p = 2;
+  byte EngineTimer_p = 10;
+}
+
+on start
+{
+  setTimerCyclic(IgnitionTimer,0,IgnitionTimer_p);
+  setTimerCyclic(EngineTimer,0,EngineTimer_p);
+}
+
+on timer IgnitionTimer
+{
+  IGN_01_2ms_msg.Ignition_sts = @sysvar::ENG::Ignition_sts_value;
+  output(IGN_01_2ms_msg);
+}
+
+on timer EngineTimer
+{
+  ENG_02_10ms_msg.Engine_sts = @sysvar::ENG::Engine_sts_value;
+  output(ENG_02_10ms_msg);
+}

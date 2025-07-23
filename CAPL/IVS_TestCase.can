@@ -1,0 +1,589 @@
+﻿/*@!Encoding:65001*/
+includes
+{
+  
+}
+
+variables
+{
+  message IGN_01_2ms IGN_01_2ms_msg;
+  message ENG_02_10ms ENG_02_10ms_msg;
+  message BATT_01_10ms BATT_01_10ms_msg;
+  message BRK_01_10ms BRK_01_10ms_msg;
+  message Fault_sts_Req Fault_sts_Req_msg;
+  message Fault_sts_Rsp Fault_sts_Rsp_msg;
+  message STR_01_10ms STR_01_10ms_msg;
+  mstimer ten_msecond_timer;
+  msTimer two_msecond_timer;
+  msTimer for0_timer;
+  int ign_count = 0;
+  /* ==============================================*/
+  msTimer IGN_timer;
+  msTimer ENG_timer;
+  msTimer BRK_timer;
+}
+
+void MainTest ()
+{
+  long TC_verdict_1;
+  long TC_verdict_2;
+  long TC_verdict_3;
+  long TC_verdict_4;
+  long TC_verdict_5;
+  long TC_verdict_6;
+  long TC_verdict_7;
+  
+  
+  testcase_1();
+  TC_verdict_1 = testGetVerdictLastTestCase();
+  
+  testcase_2();
+  TC_verdict_2 = testGetVerdictLastTestCase();
+  
+  testcase_3();
+  TC_verdict_3 = testGetVerdictLastTestCase();
+
+  testcase_1();
+  TC_verdict_1 = testGetVerdictLastTestCase();
+  
+  if(TC_verdict_1 == 0)
+  {
+    testSetVerdictModule(0);
+  }
+  else
+  {
+    testSetVerdictModule(1);
+  }
+}
+
+testcase testcase_1()
+{
+  int i; 
+  
+  testCaseTitle("Tc 1.0.1", "IVS BlackBox Test Case 1.0.1");
+  
+  testCaseDescription("Test case is used to check the ability of the SUT to switch ");
+  testCaseDescription("into the build-in diagmostic and test mode. The test case dose ");
+  testCaseDescription("not change test settings within the device. ");
+  
+  testStep("1.0", "Communication prepared");
+  //
+  setTimerCyclic(ENG_timer, 0, 10);
+  setTimerCyclic(IGN_timer, 0, 2);
+  
+  IGN_01_2ms_msg.Ignition_sts = 1;
+  ENG_02_10ms_msg.Engine_sts = 1;
+  BATT_01_10ms_msg.Batt_Percent = 12;
+  output(BATT_01_10ms_msg);
+  
+  testWaitForTimeout(5000);
+  
+  for(i = 0; i < 150; i++)
+  {
+    Fault_sts_Req_msg.All_Fault_sts_request = 1;
+    output(Fault_sts_Req_msg);
+    
+    testWaitForMessage(Fault_sts_Rsp, 100);
+    if(Fault_sts_Rsp_msg.BATT_Percent_Err_sts == 2)
+    {
+      testStepPass("2.0", "Request sent to the Sut, IVS message");
+    }
+    else
+    {
+      testStepFail("2.0", "Request sent toe the SUT, IVS message");
+    }
+  }
+  
+  BATT_01_10ms_msg.Batt_Percent = 32;
+  output(BATT_01_10ms_msg);
+  
+  testWaitForTimeout(100);
+  
+  for(i = 0; i < 50; i++)
+  {
+    Fault_sts_Req_msg.All_Fault_sts_request = 1;
+    output(Fault_sts_Req_msg);
+    
+    testWaitForMessage(Fault_sts_Rsp, 10);
+    if(Fault_sts_Rsp_msg.BATT_Percent_Err_sts == 1)
+    {
+      testStepPass("2.0", "Request sent to the Sut, IVS message");
+    }
+    else
+    {
+      testStepFail("2.0", "Request sent toe the SUT, IVS message");
+    }
+  }
+  
+  for(i = 0; i < 300; i++)
+  {
+    Fault_sts_Req_msg.All_Fault_sts_request = 1;
+    output(Fault_sts_Req_msg);
+    
+    setTimerCyclic(for0_timer,0,2);
+    
+    testWaitForMessage(Fault_sts_Rsp, 200); //원래 200
+    if(Fault_sts_Rsp_msg.BATT_Percent_Err_sts == 0)
+    {
+      testStepPass("2.0", "Request sent to the Sut, IVS message");
+    }
+    else
+    {
+      testStepFail("2.0", "Request sent to the Sut, IVS message");
+    }
+  }
+  
+}
+
+testcase testcase_2()
+{
+  int j;
+  
+  testCaseTitle("Tc 2.0", "IVS BlackBox Test Case 2.0");
+  
+  testCaseDescription("Test case is used to check the ability of the SUT to switch ");
+  testCaseDescription("into the build-in diagmostic and test mode. The test case dose ");
+  testCaseDescription("not change test settings within the device. ");
+  
+  testStep("2.0", "Communication prepared");
+  
+  setTimerCyclic(ENG_timer, 0, 10);
+  setTimerCyclic(IGN_timer, 0, 2);
+  
+  IGN_01_2ms_msg.Ignition_sts = 1;
+  ENG_02_10ms_msg.Engine_sts = 1;
+  BATT_01_10ms_msg.Batt_Percent = 85;
+  BATT_01_10ms_msg.Batt_Chg_Sts = 1;
+  output(BATT_01_10ms_msg);
+  
+  testWaitForTimeout(5000);
+  
+  for(j = 0; j < 150; j++)
+  { 
+    Fault_sts_Req_msg.All_Fault_sts_request = 1;
+    output(Fault_sts_Req_msg);
+    testWaitForMessage(Fault_sts_Rsp,100);
+    if(Fault_sts_Rsp_msg.BATT_Chg_Err_sts == 2)
+    {
+      testStepPass("2.0", "성공이다");
+    }
+    else
+    {
+      testStepFail("2.0", "실패다");
+    }
+  }
+  
+  BATT_01_10ms_msg.Batt_Chg_Sts = 0;
+  output(BATT_01_10ms_msg);
+  
+  testWaitForTimeout(100);
+  for(j = 0; j < 150; j++)
+  {
+    Fault_sts_Req_msg.All_Fault_sts_request = 1;
+    output(Fault_sts_Req_msg);
+    
+    testWaitForMessage(Fault_sts_Rsp, 10);
+    if(Fault_sts_Rsp_msg.BATT_Chg_Err_sts == 1)
+    {
+      testStepPass("2.0", "성공이다");
+    }
+    else
+    {
+      testStepFail("2.0", "실패다");
+    }
+  }
+  
+  for(j = 0; j < 300; j++)
+  {
+    Fault_sts_Req_msg.All_Fault_sts_request = 1;
+    output(Fault_sts_Req_msg);
+    
+    setTimerCyclic(for0_timer,0,2);
+    
+    testWaitForMessage(Fault_sts_Rsp, 200);
+    if(Fault_sts_Rsp_msg.BATT_Chg_Err_sts == 0)
+    {
+      testStepPass("2.0", "Request sent to the Sut, IVS message");
+    }
+    else
+    {
+      testStepFail("2.0", "Request sent to the Sut, IVS message");
+    }
+  }
+  
+}
+
+
+
+testcase testcase_3()
+{
+  int k;
+  
+  testCaseTitle("Tc 3.0", "IVS BlackBox Test Case 3.0");
+  
+  testCaseDescription("Test case is used to check the ability of the SUT to switch ");
+  testCaseDescription("into the build-in diagmostic and test mode. The test case dose ");
+  testCaseDescription("not change test settings within the device. ");
+  
+  testStep("3.0", "Communication prepared");
+  
+  setTimerCyclic(ENG_timer, 0, 10);
+  setTimerCyclic(IGN_timer, 0, 2);
+  
+  IGN_01_2ms_msg.Ignition_sts = 1;
+  ENG_02_10ms_msg.Engine_sts = 1;
+  
+  BATT_01_10ms_msg.Batt_Voltage = 15800;
+  output(BATT_01_10ms_msg);
+  
+  //testWaitForTimeout(500);
+  
+  for(k = 0; k < 50; k++)
+  {
+    Fault_sts_Req_msg.All_Fault_sts_request = 1;
+    output(Fault_sts_Req_msg);
+    
+    testWaitForMessage(Fault_sts_Rsp,5);
+    if(Fault_sts_Rsp_msg.BATT_Vol_Err_sts == 2)
+    {
+      testStepPass("3.0", "Request sent to the Sut, IVS message");
+    }
+    else
+    {
+      testStepFail("3.0", "Request sent to the Sut, IVS message");
+    }
+  }
+  
+  BATT_01_10ms_msg.Batt_Voltage = 0;
+  output(BATT_01_10ms_msg);
+  
+  testWaitForTimeout(100);
+  
+  for(k = 0; k < 100; k++)
+  {
+    Fault_sts_Req_msg.All_Fault_sts_request = 1;
+    output(Fault_sts_Req_msg);
+    
+    testWaitForMessage(Fault_sts_Rsp, 10);
+    if(Fault_sts_Rsp_msg.BATT_Vol_Err_sts == 1)
+    {
+      testStepPass("3.0", "Request sent to the Sut, IVS message");
+    }
+    else
+    {
+      testStepFail("3.0", "4Request sent to the Sut, IVS message");
+    }
+  }
+  
+  for(k = 0; k < 300; k++)
+  {
+    Fault_sts_Req_msg.All_Fault_sts_request = 1;
+    output(Fault_sts_Req_msg);
+    
+    setTimerCyclic(for0_timer,0,2);
+    
+    testWaitForMessage(Fault_sts_Rsp, 200);
+    if(Fault_sts_Rsp_msg.BATT_Vol_Err_sts == 0)
+    {
+      testStepPass("3.0", "Request sent to the Sut, IVS message");
+    }
+    else
+    {
+      testStepFail("3.0", "Request sent to the Sut, IVS message");
+    }
+  }
+  
+}
+
+
+
+testcase testcase_4()
+{
+  int m;
+  testCaseTitle("Tc 4.0", "IVS BlackBox Test Case 4.0");
+  
+  testCaseDescription("Test case is used to check the ability of the SUT to switch ");
+  testCaseDescription("into the build-in diagmostic and test mode. The test case dose ");
+  testCaseDescription("not change test settings within the device. ");
+  
+  testStep("4.0", "Communication prepared");
+  
+  setTimerCyclic(ENG_timer, 0, 10);
+  ENG_02_10ms_msg.Engine_sts = 1;
+  IGN_01_2ms_msg.Ignition_sts = 1;
+  BATT_01_10ms_msg.Batt_Percent = 50;
+  output(BATT_01_10ms_msg);
+  IGN_01_2ms_msg.Ignition_sts = 3;
+  output(IGN_01_2ms_msg);
+  
+  testWaitForTimeout(100);
+  
+  for(m = 0; m < 50; m++)
+  {
+    Fault_sts_Req_msg.All_Fault_sts_request = 1;
+    output(Fault_sts_Req_msg);
+    
+    testWaitForMessage(Fault_sts_Rsp, 10);
+    if(Fault_sts_Rsp_msg.IGN_Err_sts == 2)
+    {
+      testStepPass("4.0", "Request sent to the Sut, IVS message");
+    }
+    else
+    {
+      testStepFail("4.0", "5Request sent to the Sut, IVS message");
+    }
+  }
+}
+
+
+
+testcase testcase_5()
+{
+  int i;
+  testCaseTitle("Tc 5.0", "IVS BlackBox Test Case 5.0");
+  
+  testCaseDescription("Test case is used to check the ability of the SUT to switch ");
+  testCaseDescription("into the build-in diagmostic and test mode. The test case dose ");
+  testCaseDescription("not change test settings within the device. ");
+  
+  testStep("5.0", "Communication prepared");
+  
+  setTimerCyclic(IGN_timer, 0, 2);
+  BATT_01_10ms_msg.Batt_Percent = 50;
+  output(BATT_01_10ms_msg);
+  ENG_02_10ms_msg.Engine_sts = 2;
+  output(ENG_02_10ms_msg);
+  
+  for(i = 0; i < 50; i++)
+  {
+    Fault_sts_Req_msg.All_Fault_sts_request = 1;
+    output(Fault_sts_Req_msg);
+    
+    testWaitForMessage(Fault_sts_Rsp, 1000);
+    if(Fault_sts_Rsp_msg.ENG_Err_sts == 2)
+    {
+      testStepPass("5.0", "Request sent to the Sut, IVS message");
+    }
+    else
+    {
+      testStepFail("5.0", "55Request sent toe the SUT, IVS message");
+    }
+  }
+  
+}
+
+
+
+testcase testcase_6()
+{
+  int i;
+  testCaseTitle("Tc 5.0", "IVS BlackBox Test Case 5.0");
+  
+  testCaseDescription("Test case is used to check the ability of the SUT to switch ");
+  testCaseDescription("into the build-in diagmostic and test mode. The test case dose ");
+  testCaseDescription("not change test settings within the device. ");
+  
+  testStep("5.0", "Communication prepared");
+  
+  setTimerCyclic(ENG_timer, 0, 10);
+  setTimerCyclic(IGN_timer, 0, 2);
+  
+  ENG_02_10ms_msg.Engine_sts = 1;
+  IGN_01_2ms_msg.Ignition_sts = 1;
+  
+  BRK_01_10ms_msg.Brake_press = 0x7F;
+  BRK_01_10ms_msg.ACCEL_press = 0x7F;
+  BRK_01_10ms_msg.Vehicle_Speed = 255;
+  output(BRK_01_10ms_msg);
+  
+  testWaitForTimeout(500);
+  
+  for(i = 0; i < 50; i++)
+  {
+    Fault_sts_Req_msg.All_Fault_sts_request = 1;
+    output(Fault_sts_Req_msg);
+    
+    testWaitForMessage(Fault_sts_Rsp, 10);
+    if(Fault_sts_Rsp_msg.Brake_Err_sts == 2)
+    if(Fault_sts_Rsp_msg.ACCEL_Err_sts == 2)
+    if(Fault_sts_Rsp_msg.Speed_Err_sts == 2)
+    {
+      testStepPass("6.0", "Request sent to the Sut, IVS message");
+    }
+    else
+    {
+      testStepFail("6.0", "55Request sent toe the SUT, IVS message");
+    }
+  }
+  
+  BRK_01_10ms_msg.Brake_press = -2;
+  BRK_01_10ms_msg.ACCEL_press = 50;
+  BRK_01_10ms_msg.Vehicle_Speed = 50;
+  output(BRK_01_10ms_msg);
+  
+  testWaitForTimeout(80);
+  
+  for(i = 0; i < 50; i++)
+  {
+    Fault_sts_Req_msg.All_Fault_sts_request = 1;
+    output(Fault_sts_Req_msg);
+    
+    testWaitForMessage(Fault_sts_Rsp, 9);
+    if(Fault_sts_Rsp_msg.Brake_Err_sts == 1)
+    if(Fault_sts_Rsp_msg.ACCEL_Err_sts == 1)
+    if(Fault_sts_Rsp_msg.Speed_Err_sts == 1)
+    {
+      testStepPass("6.0", "Request sent to the Sut, IVS message");
+    }
+    else
+    {
+      testStepFail("6.0", "55Request sent toe the SUT, IVS message");
+    }
+  }
+  
+  for(i = 0; i < 300; i++)
+  {
+    Fault_sts_Req_msg.All_Fault_sts_request = 1;
+    output(Fault_sts_Req_msg);
+    
+    setTimerCyclic(for0_timer,0,2);
+    
+    testWaitForMessage(Fault_sts_Rsp, 200);
+    if(Fault_sts_Rsp_msg.Brake_Err_sts == 0)
+    if(Fault_sts_Rsp_msg.ACCEL_Err_sts == 0)
+    if(Fault_sts_Rsp_msg.Speed_Err_sts == 0)
+    {
+      testStepPass("2.0", "Request sent to the Sut, IVS message");
+    }
+    else
+    {
+      testStepFail("2.0", "Request sent to the Sut, IVS message");
+    }
+  }
+  
+}
+
+testcase testcase_7()
+{
+  int j;
+  testCaseTitle("Tc 7.0", "IVS BlackBox Test Case 7.0");
+  
+  testCaseDescription("Test case is used to check the ability of the SUT to switch ");
+  testCaseDescription("into the build-in diagmostic and test mode. The test case dose ");
+  testCaseDescription("not change test settings within the device. ");
+  
+  testStep("7.0", "Communication prepared");
+  
+  setTimerCyclic(ENG_timer, 0, 10);
+  setTimerCyclic(IGN_timer, 0, 2);
+  
+  ENG_02_10ms_msg.Engine_sts = 1;
+  IGN_01_2ms_msg.Ignition_sts = 1;
+  
+  testWaitForTimeout(1000);
+  
+  STR_01_10ms_msg.Steering_angle = 730;
+  output(STR_01_10ms_msg);
+  
+  for(j = 0; j < 50; j++)
+  {
+    Fault_sts_Req_msg.All_Fault_sts_request = 1;
+    output(Fault_sts_Req_msg);
+    
+    testWaitForMessage(Fault_sts_Rsp, 1000);
+    if(Fault_sts_Rsp_msg.Steering_Err_sts == 2)
+    {
+      testStepPass("7.0", "Request sent to the Sut, IVS message");
+    }
+    else
+    {
+      testStepFail("7.0", "55Request sent toe the SUT, IVS message");
+    }
+  }
+  
+  STR_01_10ms_msg.Steering_angle = 0;
+  output(STR_01_10ms_msg);
+  
+  testWaitForTimeout(80);
+  
+  for(j = 0; j < 50; j++)
+  {
+    Fault_sts_Req_msg.All_Fault_sts_request = 1;
+    output(Fault_sts_Req_msg);
+    
+    testWaitForMessage(Fault_sts_Rsp, 9);
+    if(Fault_sts_Rsp_msg.Steering_Err_sts == 1)
+    {
+      testStepPass("7.0", "Request sent to the Sut, IVS message");
+    }
+    else
+    {
+      testStepFail("7.0", "55Request sent toe the SUT, IVS message");
+    }
+  }
+  
+  for(j = 0; j < 300; j++)
+  {
+    Fault_sts_Req_msg.All_Fault_sts_request = 1;
+    output(Fault_sts_Req_msg);
+    
+    setTimerCyclic(for0_timer,0,2);
+    
+    testWaitForMessage(Fault_sts_Rsp, 200);
+    if(Fault_sts_Rsp_msg.Steering_Err_sts == 0)
+    {
+      testStepPass("2.0", "Request sent to the Sut, IVS message");
+    }
+    else
+    {
+      testStepFail("2.0", "Request sent to the Sut, IVS message");
+    }
+  }
+  
+}
+
+on timer ten_msecond_timer
+{
+  output(BATT_01_10ms_msg);
+  output(ENG_02_10ms_msg);
+}
+
+on timer two_msecond_timer
+{
+  output(IGN_01_2ms_msg);
+}
+
+on timer for0_timer
+{
+  if(IGN_01_2ms_msg.Ignition_sts == 1)
+  {
+    IGN_01_2ms_msg.Ignition_sts = 0;
+  }
+  else if(IGN_01_2ms_msg.Ignition_sts == 0)
+  {
+    IGN_01_2ms_msg.Ignition_sts = 1;
+    ign_count = ign_count + 1;
+  }
+  
+  if(ign_count >= 50)
+  {
+    cancelTimer(for0_timer);
+  }
+  
+  output(IGN_01_2ms_msg);
+}
+
+on timer IGN_timer
+{
+  output(IGN_01_2ms_msg);
+}
+
+on timer ENG_timer
+{
+  output(ENG_02_10ms_msg);
+}
+
+on message Fault_sts_Rsp
+{
+  Fault_sts_Rsp_msg = this;
+}
