@@ -44,4 +44,9 @@ Vector CANoe를 활용하여 ECU의 진단 통신 관련 요구사양서를 분�
 </table>  
 
 ## 3️⃣ Test Case 개발  
-<img width="400" height="400" alt="Image" src="https://github.com/user-attachments/assets/7b22f8fb-4ba4-4af9-8def-c96a54f0855f" />
+<img width="400" height="400" alt="Image" src="https://github.com/user-attachments/assets/0e501ff6-0eb1-40d5-8f58-0867abfb26d4" />
+
+## 4️⃣ CAPL 자동화 스크립트 개발 및 테스트  
+
+## 5️⃣ 검증 결과 보고  
+
