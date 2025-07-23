@@ -10,4 +10,7 @@ Vector CANoe를 활용하여 ECU의 진단 통신 관련 요구사양서를 분�
 <img width="600" height="500" alt="Image" src="https://github.com/user-attachments/assets/5592f2fb-1732-4efd-b33a-cecfbc461391" />
 
 ## 전체 진행 과정  
-<img width="600" height="500" alt="Image" src="https://github.com/user-attachments/assets/9c3e886f-9b4e-4e7c-bd87-36c72a82b4af" />
+<img width="600" height="500" alt="Image" src="https://github.com/user-attachments/assets/9c3e886f-9b4e-4e7c-bd87-36c72a82b4af" />  
+
+## 1️⃣ 요구사양서 분석  
+<img width="600" height="500" alt="Image" src="https://github.com/user-attachments/assets/dd477180-c079-4d04-b006-44a3a616c1af" />
