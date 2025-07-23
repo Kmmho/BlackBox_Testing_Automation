@@ -42,3 +42,6 @@ Vector CANoe를 활용하여 ECU의 진단 통신 관련 요구사양서를 분�
     </td>
   </tr>
 </table>  
+
+## 3️⃣ Test Case 개발  
+<img width="300 height="300" alt="Image" src="https://github.com/user-attachments/assets/aea2f564-e4fe-4b32-a017-927c106d56aa" />
