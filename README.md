@@ -38,7 +38,7 @@ Vector CANoe를 활용하여 ECU의 진단 통신 관련 요구사양서를 분�
       Panel(UI)
     </td>
     <td>
-      <img width="300" height="300" alt="Image" src="https://github.com/user-attachments/assets/9c3ce70d-a89b-4455-a063-ba3b5d88c1d6" />
+      <img width="400" height="300" alt="Image" src="https://github.com/user-attachments/assets/9c3ce70d-a89b-4455-a063-ba3b5d88c1d6" />
     </td>
   </tr>
 </table>  
